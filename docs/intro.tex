@@ -1,0 +1,37 @@
+\section{Introduction}
+
+Optimal hardware utilization and ownership cost reduction have been the bailiwick of operating systems research for decades \cite{nova}. Thus, it is not surprising that the idea of supporting multiple guest operating systems on the same machine simultaneously, continues to be of interest within academic and enterprise environments alike. At first Full-Emulation i.e. faithful reproduction of the underlying processor/peripherals and Binary-Emulation i.e. reimplementation of guest OS APIs within the host OS, may seem viable, but severe performance penalty and OS-specificity limit their wide acceptability respectively \cite{coffing1999x86}. 
+
+`Virtualization' facilitates resource sharing by presenting an additional `thin software abstraction layer' for running several `Virtual Machines' (VMs) over a common set of physical resources. A Virtual Machine Monitor (VMM) exposes an interface identical to the underlying hardware to all VMs, effectively recreating an entire machine capable of running any number of guest operating systems. Initially proposed in 1960s, this technique was resuscitated in the late 1990s by the success of VMware - the first commercial x86 Virtual Machine Monitor (VMM) by the developers of Disco \cite{bugnion1997disco} \cite{coffing1999x86}. Finally, with the advent of hardware support (Intel VT-x \& AMD-V), virtualization was mainstreamed.
+
+Although virtualization is inherently complex, correct implementation yields several benefits which may be categorized as follows.
+
+\begin{itemize}
+\item \textbf{Extensibility}: Providing auxiliary services in a VM-centric architecture, or revamping the VM itself require lesser effort as compared to modifying the hardware. 
+\item \textbf{Security}: The implemented services need only trust the Virtual-Machine-Monitor \cite{vmm} which is far smaller and simpler to a full-fledged guest OS suffering from multiple vulnerabilities. Resultantly, the TCB (Trusted Computing Base) is substantially minimized.
+\item \textbf{Portability}: Separating the services from guest OSes, allows the former to run across different versions and vendors.
+\item \textbf{Manageability}: VMMs hold isolation to be a key goal \cite{vmmmk}, resulting in easier scrutiny of individual components.  
+\item \textbf{Functionality}: VMs provide a familiar development environment to developers by supporting existing OSes and out-of-the-box applications. Moreover, the ability to clone, save, encrypt, move, restore, and rewind a VM state, can be used for secure logging, intrusion prevention/detection, and environment migration \cite{clark2005live} \cite{dunlap2002revirt} \cite{king2005debugging} \cite{whitaker2004configuration}.
+\end{itemize}
+
+However, Virtualization is not without its challenges.
+\begin{enumerate}
+\item \textbf{Performance}: The performance depends heavily on the degree of modification to a guest OS, necessary for running it on a VM \cite{nova}. VMM architectures such as Xen \cite{barham2003xen} and Denali \cite{whitaker2002scale} support `slightly changed' guest OSes for incremental performance gains. VMware on the other hand, provides a fully virtualized environment \cite{vmmmk}.
+
+A significant portion of the time and effort in VMM research has gone towards moderating performance penalties due to an `additional' layer \cite{vmmmk}. Appreciable success has been achieved in this regard e.g. the Xen VMM has a very small overhead \cite{vmmmk}. 
+
+\item \textbf{Security}: A majority of the VMM implementations run atop large monolithic kernels \cite{nova}. Therefore, in comparison to traditional architectures, VM presents a bigger target area to malicious users due to the presence of guest OS, VMM, and a large TCB.
+
+Most prior well-known VMM implementations like Xen \cite{barham2003xen} \& KVM \cite{kivity2007kvm} as well as commercial solutions like VMware ESXi \& Microsoft Hyper-V have a TCB, which is upwards of 100 KLOC in size \cite{nova}.
+\end{enumerate}
+
+The `Microkernel' theory evangelizes small yet extensible kernels which expose a minimal set of lower-level abstractions such as address spaces, threads, and inter-process communication \cite{liedtke1995micro}. Taking cues from `Microkernel' design, the seminal work on NOVA \cite{nova} proposed to minimize the TCB (9 KLOC) for building a secure virtualization architecture. In fact, it has also been argued that `VMMs are microkernels done right' \cite{vmmmk}.  
+
+The `Exokernel' OS architecture has gone one step further by bridging the hardware $\Longleftrightarrow$ kernel gap even more. On top of that, by employing novel techniques like secure bindings, visible resource revocation, abort protocols, and libOSes (unprivileged/untrusted, extensible and replaceable library implementations called library operating systems), exokernels provide applications more control over machine resources \cite{engler1995exokernel}. Various independent research studies have shed light on the performance benefits of application-level resource management \cite{harty1992application} \cite{cao1994implementation} \cite{krueger1993tools} \cite{thekkath1994hardware}. Such a bare-bones design facilitates formal verification, provides greater flexibility, and provides better performance than monolithic as well as microkernel systems \cite{engler1995exokernel}. Aegis/ExOS -- a prototype exokernel system, achieved a remarkable speedup (5 times faster as compared to state-of-the-art) in primitive kernel operations like exception handling, IPC, and control transfer \cite{engler1995exokernel}.
+
+\vspace{5px} \noindent We propose to build a paravirtual Virtual Machine Monitor over JOS -- a pedagogical Operating System. Implemented in an `exokernel-style', JOS is simple but provides all key OS functionalities -- booting, memory management, file system, command shell and network drivers. In short, our work will make the following key contributions:
+
+\begin{enumerate}
+\item We show why an `Exokernel' should be selected over traditional monolithic/microkernel systems for hosting a VMM. A minimal kernel results in a smaller TCB, greater flexibility, and faster performance. 
+\item We present the design and implementation of a paravirtual VMM. By exporting an interface to the VM which is similar (but non-identical) to the underlying hardware, we would achieve lower performance overhead.
+\end{enumerate}

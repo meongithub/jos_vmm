@@ -1,0 +1,35 @@
+%!TEX option = --shell-escape
+
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage[margin=.95in]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{xstring}
+\usepackage{tikz}
+\usetikzlibrary{fit, calc}
+\usepackage{svg}
+\pagestyle{empty} 
+
+
+\sloppy
+\date{}
+
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+\begin{document}
+\title{Yet Another Operating System: Exokernel meets VMM}
+\author{Navinkumar Adhe, Ayush Jain, and Dixit Paudel\\
+University of California, Davis\\
+\{nadhe, jain, meondav\}@ucdavis.edu}
+\maketitle
+
+\input{intro.tex}
+\input{evidence.tex}
+
+\bibliographystyle{abbrv}
+\bibliography{mybib.bib}
+\end{document}
