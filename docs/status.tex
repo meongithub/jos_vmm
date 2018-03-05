@@ -1,0 +1,19 @@
+\section {Status}
+
+Towards implementing an exokernel based VMM, we started with a base JOS code which included:
+\begin{itemize}
+\item \textbf{Bootloader}
+\item \textbf{Memory Management}
+\item \textbf{User Environments}
+\end{itemize}
+
+The VMM module we will develop will run as user environment on the top of this base JOS base kernel.
+
+We used the Stony Brook CSE591 \cite {cse591} skeleton code as a starting point as it will guide us to building a VMM through lab exercises. We ported the bootloader and the memory management modules from MIT's 6.828 \cite{6.828} JOS implementation.
+
+The choice of the x-86 emulator in the MIT 6.828 course is qemu, but qemu doesn't support VT-x which is essential for building our VMM. We therefore switched to the bochs emulator as demanded by the Stony Brook CSE591 course. There were some configuration issues caused by a version mismatch, but we were able to overcome those and get the emulator to bootload JOS.
+
+The base bootloader code provided by the CSE591 course handles multi booting, and exceeded the allowable bootfile size limit of 510 bytes. We changed it to boot a single kernel image, and contained the bootfile size within the allowable limit. We also successfully ported the memory management code from JOS.
+
+Our next step is to port user environment code from MIT's JOS implementation. This will include a shell environment from which our VMM will be run. Our first step towards the VMM implementation will require us to implement a guest jos bootloader and kernel. Further steps require implementing extended page table support, vmlaunch, vmresume, and vmexit.
+

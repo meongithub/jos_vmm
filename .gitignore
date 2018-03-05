@@ -18,3 +18,7 @@
 *~
 vivek.map
 vmm/guest/vivek.map
+
+*.aux
+*.log
+*.synctex*
